@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-// Define a classe principal que estende StatefulWidget, permitindo o gerenciamento de estado
 class GraphRoute extends StatefulWidget {
   const GraphRoute({super.key});
 
@@ -9,50 +8,47 @@ class GraphRoute extends StatefulWidget {
   State<GraphRoute> createState() => _GraphRouteState();
 }
 
-// A classe de estado associada à GraphRoute
 class _GraphRouteState extends State<GraphRoute> {
-  // Declaração do controlador WebView, que será usado para controlar a WebView
   late WebViewController controller;
 
-  // O initState é chamado uma vez quando o widget é inserido na árvore de widgets
   @override
   void initState() {
     super.initState();
-    
+
     // Inicializa o controlador da WebView
     controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted) // Permite a execução de JavaScript na WebView
+      ..setJavaScriptMode(JavaScriptMode.unrestricted) // Permite JavaScript
       ..setNavigationDelegate(
-        // Define as regras de navegação e eventos dentro da WebView
         NavigationDelegate(
           onProgress: (int progress) {
-            // Aqui você pode adicionar lógica para atualizar uma barra de progresso enquanto a página carrega
+            // Atualizar barra de progresso
           },
           onPageStarted: (String url) {
-            // Chamado quando o carregamento de uma nova página começa
+            // Quando a página começar a carregar
           },
           onPageFinished: (String url) {
-            // Chamado quando o carregamento de uma página é concluído
+            // Quando a página terminar de carregar
           },
           onHttpError: (HttpResponseError error) {
-            // Chamado quando há um erro HTTP na solicitação
+            // Tratar erro HTTP
           },
           onWebResourceError: (WebResourceError error) {
-            // Chamado quando há um erro ao carregar recursos na web
+            // Tratar erro ao carregar recursos
           },
           onNavigationRequest: (NavigationRequest request) {
-            // Controla as requisições de navegação. Aqui está bloqueando navegações para o YouTube
+            // Controla a navegação entre URLs
             if (request.url.startsWith('https://www.youtube.com/')) {
-              return NavigationDecision.prevent; // Bloqueia a navegação para o YouTube
+              return NavigationDecision.prevent; // Bloqueia YouTube
             }
-            return NavigationDecision.navigate; // Permite a navegação em outras URLs
+            return NavigationDecision.navigate;
           },
         ),
-      )
-      ..loadRequest(Uri.parse('https://flutter.dev')); // Carrega a URL inicial da WebView
+      );
+
+    // Carregar arquivo HTML local
+    controller.loadFlutterAsset('assets/index.html'); // Carregar arquivo HTML local
   }
 
-  // Método build, onde é definida a interface do usuário
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +76,7 @@ class _GraphRouteState extends State<GraphRoute> {
           ),
         ),
       ),
-      body: WebViewWidget(controller: controller), // Exibe a WebView dentro do body do Scaffold
+      body: WebViewWidget(controller: controller), // Exibe a WebView com o arquivo local
     );
   }
 }

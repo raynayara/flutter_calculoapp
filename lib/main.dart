@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calculoapp/pages/graph_route.dart';
 import 'package:flutter_calculoapp/pages/home_page.dart';
 
 void main() {
