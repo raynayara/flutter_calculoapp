@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calculoapp/pages/derivada_direcional.dart';
 import 'package:flutter_calculoapp/pages/derivada_implicita.dart';
-import 'package:flutter_calculoapp/pages/graphic.dart';
+import 'package:flutter_calculoapp/pages/graph_route.dart';
 import 'package:flutter_calculoapp/pages/plano_tangente.dart';
 import 'package:flutter_calculoapp/pages/reta_normal.dart';
 
@@ -223,8 +223,8 @@ class _HomePageState extends State<HomePage> {
           ),
           // Novo Container Adicionado
           Positioned(
-            left: 70,
-            top: 500,
+            left: 50,
+            top: 600,
             child: Column(
               children: [
                 const Text(
@@ -239,10 +239,10 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10),
                 InkWell(
                   onTap: () {
-                    navigateToPage(context, GraphicPage());
+                    navigateToPage(context, const GraphRoute());
                   },
                   child: Container(
-                    width: 90,
+                    width: 300,
                     height: 80,
                     decoration: ShapeDecoration(
                       color: const Color(0xFF03465E),
@@ -259,22 +259,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 150.0, right: 40.0),
-                  child: Container(
-                    width: 280,
-                    height: 55,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF03465E),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.abc, color: Colors.white),
-                    ),
-                  ),
-                ),
+               
               ],
             ),
           ),
