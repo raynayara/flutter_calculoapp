@@ -46,7 +46,7 @@ class _GraphRouteState extends State<GraphRoute> {
       );
 
     // Carregar arquivo HTML local
-    controller.loadFlutterAsset('assets/index.html'); // Carregar arquivo HTML local
+    controller.loadFlutterAsset('assets/index.html'); 
   }
 
   @override
