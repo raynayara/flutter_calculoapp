@@ -48,223 +48,98 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Positioned(
-            left: 50,
-            top: 170,
-            child: Column(
-              children: [
-                const Text(
-                  'Derivada Direcional',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    navigateToPage(context, DerivadaDirecionalPage());
-                  },
-                  child: Container(
-                    width: 90,
-                    height: 80,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF03465E),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.directions, // Ícone para Derivada Direcional
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          const SizedBox(height: 50),
+          // Primeira linha: Derivada Direcional e Derivada Implícita
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildButtonWithLabel(
+                context,
+                'Derivada Direcional',
+                Icons.directions,
+                DerivadaDirecionalPage(),
+              ),
+              _buildButtonWithLabel(
+                context,
+                'Derivada Implícita',
+                Icons.integration_instructions,
+                DerivadaImplicitaPage(),
+              ),
+            ],
           ),
-          Positioned(
-            left: 50,
-            top: 380,
-            child: Column(
-              children: [
-                const Text(
-                  'Derivada Implícita',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    navigateToPage(context, DerivadaImplicitaPage());
-                  },
-                  child: Container(
-                    width: 90,
-                    height: 80,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF03465E),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons
-                            .integration_instructions, // Ícone para Derivada Implícita
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          const SizedBox(height: 50),
+
+          // Segunda linha: Plano Tangente e Reta Normal
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildButtonWithLabel(
+                context,
+                'Plano Tangente',
+                Icons.square_foot,
+                PlanoTangente(),
+              ),
+              _buildButtonWithLabel(
+                context,
+                'Reta Normal',
+                Icons.linear_scale,
+                RetaNormalPage(),
+              ),
+            ],
           ),
-          Positioned(
-            left: 240,
-            top: 380,
-            child: Column(
-              children: [
-                const Text(
-                  'Plano Tangente',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    navigateToPage(context, PlanoTangente());
-                  },
-                  child: Container(
-                    width: 90,
-                    height: 80,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF03465E),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.square_foot, // Ícone para Plano Tangente
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          const Spacer(),
+
+          // Botão para plotar gráfico centralizado
+          _buildButtonWithLabel(
+            context,
+            'PLOTAR GRÁFICO',
+            Icons.insert_chart_outlined,
+            const GraphRoute(),
+            width: MediaQuery.of(context).size.width * 0.7, // Responsividade
           ),
-          Positioned(
-            left: 250,
-            top: 170,
-            child: Column(
-              children: [
-                const Text(
-                  'Reta Normal',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    navigateToPage(context, RetaNormalPage());
-                  },
-                  child: Container(
-                    width: 90,
-                    height: 80,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF03465E),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.linear_scale, // Ícone para Reta Normal
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          const SizedBox(height: 40),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtonWithLabel(BuildContext context, String label, IconData icon, Widget page, {double width = 90}) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
           ),
-          const Positioned(
-            left: 23,
-            top: 100,
-            child: Text(
-              'VISÃO GERAL',
-              style: TextStyle(
-                color: Color.fromARGB(255, 7, 7, 7),
-                fontSize: 16,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                height: 0,
+        ),
+        const SizedBox(height: 10),
+        InkWell(
+          onTap: () {
+            navigateToPage(context, page);
+          },
+          child: Container(
+            width: width,
+            height: 80,
+            decoration: ShapeDecoration(
+              color: const Color(0xFF03465E),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Center(
+              child: Icon(
+                icon,
+                color: Colors.white,
               ),
             ),
           ),
-          // Novo Container Adicionado
-          Positioned(
-            left: 50,
-            top: 600,
-            child: Column(
-              children: [
-                const Text(
-                  'PLOTAR GRÁFICO',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    navigateToPage(context, const GraphRoute());
-                  },
-                  child: Container(
-                    width: 300,
-                    height: 80,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF03465E),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons
-                            .insert_chart_outlined, // Ícone para Plotar Gráfico
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-               
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
