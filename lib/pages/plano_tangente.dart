@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_calculoapp/services/send.dart';
 
 class PlanoTangente extends StatefulWidget {
   @override
@@ -14,28 +13,21 @@ class _PlanoTangenteState extends State<PlanoTangente> {
   String result = ''; // Armazena o resultado da API
 
   // Função para chamar a API
-  Future<void> fetchPlanoTangente(String func, String points) async {
-    final url = Uri.parse('https://sua-api.com/plano-tangente');
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "func": func,
-          "points": points,
-        }),
-      );
+ Future<void> _fetchPlanoTangente() async {
+    final sendFunctionData = SendFunctionData(
+      params: {
+        'function': funcController.text,
+        'x': pointController.text.split(',')[0], 
+        'y': pointController.text.split(',')[1],
+      },
+      resultKey: 'plano_tangente', 
+    );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          result = data['result']; // Assume que o resultado vem no campo 'result'
-        });
-      } else {
-        setState(() {
-          result = 'Erro ao calcular o plano tangente.';
-        });
-      }
+    try {
+      final response = await sendFunctionData.sendData('plano_tangente');
+      setState(() {
+        result = response;
+      });
     } catch (e) {
       setState(() {
         result = 'Erro: $e';
@@ -112,7 +104,7 @@ class _PlanoTangenteState extends State<PlanoTangente> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    fetchPlanoTangente(funcController.text, pointController.text);
+                    _fetchPlanoTangente();
                   }
                 },
                 child: const Text('Calcular Plano Tangente'),
@@ -121,9 +113,28 @@ class _PlanoTangenteState extends State<PlanoTangente> {
               const SizedBox(height: 16),
 
               // Exibir o resultado
-              Text(
-                result,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Card(
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Resultado',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        result,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

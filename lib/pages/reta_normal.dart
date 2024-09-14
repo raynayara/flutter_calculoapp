@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_calculoapp/services/send.dart';
 
 class RetaNormalPage extends StatefulWidget {
   @override
@@ -15,31 +14,24 @@ class _RetaNormalPageState extends State<RetaNormalPage> {
 
   // Função para chamar a API
   Future<void> fetchRetaNormal(String func, String points) async {
-    final url = Uri.parse('https://sua-api.com/reta-normal');
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "func": func,
-          "points": points,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          result = data['result']; // Assume que o resultado vem no campo 'result'
-        });
-      } else {
-        setState(() {
-          result = 'Erro ao calcular a reta normal.';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        result = 'Erro: $e';
-      });
+   final sendFunctionData = SendFunctionData(
+       params: {
+         'function': funcController.text,
+         'x': pointController.text.split(',')[0], 
+         'y': pointController.text.split(',')[1],
+       },
+       resultKey: 'reta normal', 
+     );
+ 
+     try {
+       final response = await sendFunctionData.sendData('reta_normal');
+       setState(() {
+         result = response;
+       });
+     } catch (e) {
+       setState(() {
+         result = 'Erro: $e';
+       });
     }
   }
 
