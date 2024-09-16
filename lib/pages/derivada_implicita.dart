@@ -9,27 +9,28 @@ class DerivadaImplicitaPage extends StatefulWidget {
 class _DerivadaImplicitaPageState extends State<DerivadaImplicitaPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController funcController = TextEditingController();
+  String selectedVariable = 'x'; // Variável selecionada
   String result = ''; // Armazena o resultado da API
 
   // Função para chamar a API
-  Future<void> fetchDerivadaImplicita(String func) async {
-   final sendFunctionData = SendFunctionData(
-       params: {
-         'function': funcController.text,
-  
-       },
-       resultKey: 'derivada_implicita', 
-     );
- 
-     try {
-       final response = await sendFunctionData.sendData('derivada_implicita');
-       setState(() {
-         result = response;
-       });
-     } catch (e) {
-       setState(() {
-         result = 'Erro: $e';
-       });
+  Future<void> fetchDerivadaImplicita(String func, String variable) async {
+    final sendFunctionData = SendFunctionData(
+      params: {
+        'function': funcController.text,
+        'variable': variable, // Envia a variável selecionada
+      },
+      resultKey: 'derivada_implicita',
+    );
+
+    try {
+      final response = await sendFunctionData.sendData('derivada_implicita');
+      setState(() {
+        result = response;
+      });
+    } catch (e) {
+      setState(() {
+        result = 'Erro: $e';
+      });
     }
   }
 
@@ -82,11 +83,32 @@ class _DerivadaImplicitaPageState extends State<DerivadaImplicitaPage> {
               ),
               const SizedBox(height: 16),
 
+              // Dropdown para selecionar a variável
+              DropdownButtonFormField<String>(
+                value: selectedVariable,
+                decoration: const InputDecoration(
+                  labelText: 'Selecione a incógnita',
+                  border: OutlineInputBorder(),
+                ),
+                items: ['x', 'y'].map((String variable) {
+                  return DropdownMenuItem<String>(
+                    value: variable,
+                    child: Text(variable),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedVariable = newValue!;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+
               // Botão para enviar os dados
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    fetchDerivadaImplicita(funcController.text);
+                    fetchDerivadaImplicita(funcController.text, selectedVariable);
                   }
                 },
                 child: const Text('Calcular Derivada Implícita'),
@@ -122,4 +144,3 @@ class _DerivadaImplicitaPageState extends State<DerivadaImplicitaPage> {
     );
   }
 }
-

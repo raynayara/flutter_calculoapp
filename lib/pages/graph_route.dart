@@ -10,6 +10,7 @@ class GraphRoute extends StatefulWidget {
 
 class _GraphRouteState extends State<GraphRoute> {
   late WebViewController controller;
+  TextEditingController functionController = TextEditingController(); // Controlador para a função
 
   @override
   void initState() {
@@ -45,8 +46,19 @@ class _GraphRouteState extends State<GraphRoute> {
         ),
       );
 
-    // Carregar arquivo HTML local
-    controller.loadFlutterAsset('assets/index.html'); 
+    // Carregar o arquivo HTML local inicial
+    controller.loadFlutterAsset('assets/index.html');
+  }
+
+  // Função para gerar o gráfico com base na função inserida
+  void generateGraph() {
+    String function = functionController.text;
+
+    // Verifica se a função está preenchida
+    if (function.isNotEmpty) {
+      // Executa um script JavaScript na WebView para gerar o gráfico com base na função
+      controller.runJavaScript('generateGraph("$function");');
+    }
   }
 
   @override
@@ -76,7 +88,34 @@ class _GraphRouteState extends State<GraphRoute> {
           ),
         ),
       ),
-      body: WebViewWidget(controller: controller), // Exibe a WebView com o arquivo local
+      body: Column(
+        children: [
+          // Campo de texto para o usuário inserir a função
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextFormField(
+              controller: functionController,
+              decoration: const InputDecoration(
+                labelText: 'Digite a função (ex: sin(x), x^2)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          // Botão para gerar o gráfico
+          ElevatedButton(
+            onPressed: generateGraph,
+            child: const Text('Gerar Gráfico'),
+          ),
+          const SizedBox(height: 16),
+
+          // Exibe a WebView com o arquivo local
+          Expanded(
+            child: WebViewWidget(controller: controller),
+          ),
+        ],
+      ),
     );
   }
 }
