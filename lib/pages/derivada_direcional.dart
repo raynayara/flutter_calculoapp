@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class DerivadaDirecionalPage extends StatefulWidget {
+  const DerivadaDirecionalPage({super.key});
+
   @override
   State<DerivadaDirecionalPage> createState() => _DerivadaDirecionalPageState();
 }
@@ -11,18 +13,41 @@ class _DerivadaDirecionalPageState extends State<DerivadaDirecionalPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController funcController = TextEditingController();
   TextEditingController pointsController = TextEditingController();
+  TextEditingController vectorController = TextEditingController(); // Controlador para o vetor
   String result = ''; // Armazena o resultado da API
 
   // Função para chamar a API
-  Future<void> fetchDerivadaDirecional(String func, String points) async {
-    final url = Uri.parse('https://sua-api.com/derivada-direcional');
+  Future<void> fetchDerivadaDirecional(String func, String points, String vector) async {
     try {
+      // Divide os pontos e verifica se existem exatamente 2 ou 3 pontos
+      final pointsList = points.split(',');
+      if (pointsList.length != 2 && pointsList.length != 3) {
+        throw Exception('Por favor, insira exatamente dois ou três pontos.');
+      }
+
+      // Divide o vetor de direção e verifica se possui o mesmo número de dimensões que os pontos
+      final vectorList = vector.split(',');
+      if (vectorList.length != pointsList.length) {
+        throw Exception('O vetor de direção deve ter o mesmo número de dimensões que os pontos.');
+      }
+
+      // Verifica se os pontos e vetores podem ser convertidos para números
+      final parsedPoints = pointsList.map((point) => double.tryParse(point)).toList();
+      final parsedVector = vectorList.map((vec) => double.tryParse(vec)).toList();
+
+      if (parsedPoints.contains(null) || parsedVector.contains(null)) {
+        throw Exception('Pontos ou vetor inválidos. Certifique-se de inserir números válidos.');
+      }
+
+      // URL da API
+      final url = Uri.parse('https://sua-api.com/derivada-direcional');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           "func": func,
-          "points": points,
+          "points": points,   // Enviar os pontos
+          "vector": vector    // Enviar o vetor de direção
         }),
       );
 
@@ -108,11 +133,27 @@ class _DerivadaDirecionalPageState extends State<DerivadaDirecionalPage> {
               ),
               const SizedBox(height: 16),
 
+              // Campo para o vetor de direção
+              TextFormField(
+                controller: vectorController,
+                decoration: const InputDecoration(
+                  labelText: 'Digite o vetor de direção (ex: 1,0,0)',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, digite o vetor de direção';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
               // Botão para enviar os dados
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    fetchDerivadaDirecional(funcController.text, pointsController.text);
+                    fetchDerivadaDirecional(funcController.text, pointsController.text, vectorController.text);
                   }
                 },
                 child: const Text('Calcular Derivada Direcional'),

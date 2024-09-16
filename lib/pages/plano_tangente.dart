@@ -12,28 +12,43 @@ class _PlanoTangenteState extends State<PlanoTangente> {
   TextEditingController pointController = TextEditingController();
   String result = ''; // Armazena o resultado da API
 
-  // Função para chamar a API
- Future<void> _fetchPlanoTangente() async {
+ // Função para chamar a API
+Future<void> _fetchPlanoTangente() async {
+  try {
+    // Divide os pontos e verifica se existem exatamente dois
+    final points = pointController.text.split(',');
+    if (points.length != 2) {
+      throw Exception('Por favor, insira exatamente dois pontos (x e y).');
+    }
+
+    // Verifica se os pontos podem ser convertidos para números
+    final x = double.tryParse(points[0]);
+    final y = double.tryParse(points[1]);
+
+    if (x == null || y == null) {
+      throw Exception('Pontos inválidos. Certifique-se de inserir números válidos.');
+    }
+
     final sendFunctionData = SendFunctionData(
       params: {
         'function': funcController.text,
-        'x': pointController.text.split(',')[0], 
-        'y': pointController.text.split(',')[1],
+        'x': x.toString(),
+        'y': y.toString(),
       },
-      resultKey: 'plano_tangente', 
+      resultKey: 'plano_tangente',
     );
 
-    try {
-      final response = await sendFunctionData.sendData('plano_tangente');
-      setState(() {
-        result = response;
-      });
-    } catch (e) {
-      setState(() {
-        result = 'Erro: $e';
-      });
-    }
+    final response = await sendFunctionData.sendData('plano_tangente');
+    setState(() {
+      result = response;
+    });
+  } catch (e) {
+    setState(() {
+      result = 'Erro: $e';
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
