@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_calculoapp/services/send.dart';
 
 class DerivadaImplicitaPage extends StatefulWidget {
   @override
@@ -14,30 +13,23 @@ class _DerivadaImplicitaPageState extends State<DerivadaImplicitaPage> {
 
   // Função para chamar a API
   Future<void> fetchDerivadaImplicita(String func) async {
-    final url = Uri.parse('https://sua-api.com/derivada-implicita');
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          "func": func,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          result = data['result']; // Assume que o resultado vem no campo 'result'
-        });
-      } else {
-        setState(() {
-          result = 'Erro ao calcular a derivada implícita.';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        result = 'Erro: $e';
-      });
+   final sendFunctionData = SendFunctionData(
+       params: {
+         'function': funcController.text,
+  
+       },
+       resultKey: 'derivada_implicita', 
+     );
+ 
+     try {
+       final response = await sendFunctionData.sendData('derivada_implicita');
+       setState(() {
+         result = response;
+       });
+     } catch (e) {
+       setState(() {
+         result = 'Erro: $e';
+       });
     }
   }
 
@@ -103,10 +95,26 @@ class _DerivadaImplicitaPageState extends State<DerivadaImplicitaPage> {
               const SizedBox(height: 16),
 
               // Exibir o resultado
-              Text(
-                result,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              if (result.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  child: Text(
+                    result,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
             ],
           ),
         ),
@@ -114,3 +122,4 @@ class _DerivadaImplicitaPageState extends State<DerivadaImplicitaPage> {
     );
   }
 }
+
