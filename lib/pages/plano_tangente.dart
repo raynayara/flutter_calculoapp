@@ -128,29 +128,26 @@ Future<void> _fetchPlanoTangente() async {
               const SizedBox(height: 16),
 
               // Exibir o resultado
-              Card(
-                elevation: 5,
-                child: Padding(
+              if (result.isNotEmpty)
+                Container(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Resultado',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        result,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ],
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  child: Text(
+                    result,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -158,3 +155,4 @@ Future<void> _fetchPlanoTangente() async {
     );
   }
 }
+

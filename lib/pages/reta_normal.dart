@@ -14,38 +14,24 @@ class _RetaNormalPageState extends State<RetaNormalPage> {
 
   // Função para chamar a API com validações
   Future<void> fetchRetaNormal(String func, String points) async {
-    try {
-      // Divide os pontos
-      final pointsList = points.split(',');
-      if (pointsList.length != 2) {
-        throw Exception('Por favor, insira exatamente dois pontos (x, y).');
-      }
-
-      // Verifica se os pontos podem ser convertidos para números
-      final parsedPoints = pointsList.map((point) => double.tryParse(point)).toList();
-      if (parsedPoints.contains(null)) {
-        throw Exception('Pontos inválidos. Certifique-se de inserir números válidos.');
-      }
-
-      // Preparar os dados para envio
-      final sendFunctionData = SendFunctionData(
-        params: {
-          'function': funcController.text,
-          'x': pointsList[0].trim(), // Remove espaços extras
-          'y': pointsList[1].trim(),
-        },
-        resultKey: 'reta normal', 
-      );
-
-      // Envia a requisição para a API
-      final response = await sendFunctionData.sendData('reta_normal');
-      setState(() {
-        result = response;
-      });
-    } catch (e) {
-      setState(() {
-        result = 'Erro: $e';
-      });
+   final sendFunctionData = SendFunctionData(
+       params: {
+         'function': funcController.text,
+         'x': pointController.text.split(',')[0], 
+         'y': pointController.text.split(',')[1],
+       },
+       resultKey: 'reta normal', 
+     );
+ 
+     try {
+       final response = await sendFunctionData.sendData('reta_normal');
+       setState(() {
+         result = response;
+       });
+     } catch (e) {
+       setState(() {
+         result = 'Erro: $e';
+       });
     }
   }
 
@@ -132,10 +118,26 @@ class _RetaNormalPageState extends State<RetaNormalPage> {
               const SizedBox(height: 16),
 
               // Exibir o resultado
-              Text(
-                result,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              if (result.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  child: Text(
+                    result,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
             ],
           ),
         ),
@@ -143,3 +145,4 @@ class _RetaNormalPageState extends State<RetaNormalPage> {
     );
   }
 }
+
