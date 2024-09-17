@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_calculoapp/services/send.dart';
 
 class DerivadaDirecionalPage extends StatefulWidget {
   const DerivadaDirecionalPage({super.key});
@@ -38,29 +37,22 @@ class _DerivadaDirecionalPageState extends State<DerivadaDirecionalPage> {
       if (parsedPoints.contains(null) || parsedVector.contains(null)) {
         throw Exception('Pontos ou vetor inválidos. Certifique-se de inserir números válidos.');
       }
-
       // URL da API
-      final url = Uri.parse('https://sua-api.com/derivada-direcional');
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
+      SendFunctionData sendFunctionData = SendFunctionData(
+        params: {
           "func": func,
-          "points": points,   // Enviar os pontos
-          "vector": vector    // Enviar o vetor de direção
-        }),
+          "points": points,
+          "vector": vector
+        },
+        resultKey: 'derivada_direcional', // Assumindo que a chave na resposta é 'result'
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          result = data['result']; // Assume que o resultado vem no campo 'result'
-        });
-      } else {
-        setState(() {
-          result = 'Erro ao calcular a derivada direcional.';
-        });
-      }
+      // Chame o método `sendData` da classe SendFunctionData
+      String apiResult = await sendFunctionData.sendData('derivada_direcional');
+
+      setState(() {
+        result = apiResult; // Exibe o resultado no UI
+      });
     } catch (e) {
       setState(() {
         result = 'Erro: $e';
@@ -162,10 +154,26 @@ class _DerivadaDirecionalPageState extends State<DerivadaDirecionalPage> {
               const SizedBox(height: 16),
 
               // Exibir o resultado
-              Text(
-                result,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              if (result.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  child: Text(
+                    result,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
             ],
           ),
         ),
@@ -173,3 +181,4 @@ class _DerivadaDirecionalPageState extends State<DerivadaDirecionalPage> {
     );
   }
 }
+

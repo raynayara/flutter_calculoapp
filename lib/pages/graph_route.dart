@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_calculoapp/services/send.dart';
+
 
 class GraphRoute extends StatefulWidget {
   const GraphRoute({super.key});
@@ -51,15 +54,35 @@ class _GraphRouteState extends State<GraphRoute> {
   }
 
   // Função para gerar o gráfico com base na função inserida
-  void generateGraph() {
-    String function = functionController.text;
+  void generateGraph() async {
+  String function = functionController.text.trim();
 
-    // Verifica se a função está preenchida
-    if (function.isNotEmpty) {
-      // Executa um script JavaScript na WebView para gerar o gráfico com base na função
-      controller.runJavaScript('generateGraph("$function");');
+  if (function.isNotEmpty) {
+
+    // Cria uma instância de SendFunctionData
+    final sendFunctionData = SendFunctionData(
+      params: {'function': functionController.text},
+      resultKey: 'grafico' // Substitua pelo nome da chave esperada na resposta
+    );
+
+    // Envia os dados para o endpoint
+    final result = await sendFunctionData.sendData('grafico');
+
+    print('Resultado obtido: $result');
+
+    if (result.isNotEmpty && !result.contains('Erro')) {
+      // Carrega o HTML na WebView
+      controller.loadHtmlString(result);
+    } else {
+      print('Erro ao gerar gráfico: $result');
     }
+  } else {
+    print('Nenhuma função foi fornecida.');
   }
+  
+}
+
+  
 
   @override
   Widget build(BuildContext context) {
