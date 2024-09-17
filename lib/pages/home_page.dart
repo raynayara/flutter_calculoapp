@@ -4,6 +4,7 @@ import 'package:flutter_calculoapp/pages/derivada_implicita.dart';
 import 'package:flutter_calculoapp/pages/graph_route.dart';
 import 'package:flutter_calculoapp/pages/plano_tangente.dart';
 import 'package:flutter_calculoapp/pages/reta_normal.dart';
+import 'package:flutter_calculoapp/pages/maximos_minimos.dart'; // Import da página de máximos e mínimos
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -86,6 +87,21 @@ class _HomePageState extends State<HomePage> {
                 'Reta Normal',
                 Icons.linear_scale,
                 RetaNormalPage(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 50),
+
+          // Terceira linha: Máximos e Mínimos
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildButtonWithLabel(
+                context,
+                'Máximos e Mínimos',
+                Icons.trending_up, // Ícone representando máximos e mínimos
+                MaximosMinimosPage(), // Navegar para a página de máximos e mínimos
+                width: MediaQuery.of(context).size.width * 0.7, // Botão mais largo para centralizar
               ),
             ],
           ),
